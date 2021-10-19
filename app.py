@@ -1,47 +1,40 @@
-from flask import Flask,request
-import requests
+from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse 
-import pymysql
-import time
+from bot_logic import *
 
 app = Flask(__name__)
 
-@app.route("/bot",methods=["POST"])
+@app.route("/bot", methods=["POST"])
+
 
 def bot():
-    incomin_msg = request.values.get("Body","").lower()
+    incoming_msg = request.values.get("Body", "").strip().lower()
     response = MessagingResponse()
     msg = response.message()
     responded = False
-
-    def get_jumia():
-        conn = pymysql.connect(host="localhost", port=3306, user="root", passwd="", db="python_app")
-        cur = conn.cursor()
-        cur.execute("SELECT title,price FROM jumia_data WHERE title LIKE %s " , ("%" + incomin_msg + '%',))
-        result = cur.fetchall()
-        for row in result:
-            #msg.media(row[4])
-            msg.body(str(row[0:2]).replace("(", " " ).replace(")"," ").replace("'"," ") + "\n")
-            responded = True
-            
-    """def get_killmall():
-        conn = pymysql.connect(host="localhost", port=3306, user="root", passwd="", db="python_app")
-        cur = conn.cursor()
-        cur.execute("SELECT title,price FROM killmall_data WHERE title LIKE %s " , ("%" + incomin_msg + '%',))
-        result = cur.fetchall()
-        for row in result:
-            #msg.media(row[4])
-            msg.body(str(row[0:2]).replace("(", " " ).replace(")"," ").replace("'"," ") + "\n")
-            responded = True """
-
-    get_jumia()
-    time.sleep(5)
-   
-    if not responded:
-        msg.body('Unable to return data right now! ')
     
+    if 'hello' in incoming_msg:
+        mainmenu = ("Hello  \n How may I help you?\n 1. Check products\n 2. Customer support\n 3.See promotions\n 4. Latest news\n Please pick a number")
+        msg.body(mainmenu)
+        
+    if '1' in incoming_msg:
+        product = get_products(incoming_msg)
+        msg.media(get_products.image)
+        msg.body(product)
+      
+    if '2' in incoming_msg:
+        question = answer_questions(incoming_msg)
+        response.message(question)
+
+    if '3' in incoming_msg:
+        promotions = get_promotions()
+        response.message(promotions) 
+
+    if '4' in incoming_msg:
+        news = get_news()
+        response.message(news)
+     
     return str(response)
-
-
+       
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

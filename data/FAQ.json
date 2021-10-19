@@ -1,0 +1,15 @@
+[
+    {
+        "email": "bungeegum@hotmail.com",
+        "subject":"Payment Options",
+        "message":"What Payment options does Jumia accept",
+        "response":"Jumia accepts  Mpesa, Credit card, Paypal and cash on delivery"
+    },
+    {
+        "email": "onepieceisgood@hotmail.com",
+        "subject":"Delivery",
+        "message":"How do I get my products after purchase",
+        "response":"Jumia offers delivery services countrywide, time of arrical differs but it's between 2-10 days"
+    }
+    
+]
