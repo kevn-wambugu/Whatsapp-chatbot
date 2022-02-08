@@ -1,2 +1,2 @@
 # Whatsapp-chatbot
- Python app to scrap data from online stores and store them in a MongoDB database.The app has a whatsapp chatbot which sends the name and price of commodities as requested by the user.The app uses Twilio API. The app also answers customers questions about the business.
+The Python app uses sentiment analysis to perform basic customer service support for online stores. Through the bot users can View products as well as ask questions to the business and get answers. It can detect emotions of customer and answer accordingly. The bot uses Twilio API to run on WhatsApp.
