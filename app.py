@@ -1,40 +1,40 @@
+import re
 from flask import Flask, request
-from twilio.twiml.messaging_response import MessagingResponse 
-from bot_logic import *
+from twilio.twiml.messaging_response import MessagingResponse
+import simplebot as sb
+
 
 app = Flask(__name__)
+app.config['DEBUG'] = True
+ 
 
-@app.route("/bot", methods=["POST"])
+@app.route("/")
+def home():
+    return "<h2>Hello world</h2> Welcome to simplebot!"
 
 
-def bot():
-    incoming_msg = request.values.get("Body", "").strip().lower()
-    response = MessagingResponse()
-    msg = response.message()
-    responded = False
+@app.route("/get", methods=['POST'])
+def get_bot_response():
+    user_input = request.values.get('Body', '').lower()
+    resp = MessagingResponse()
+    msg = resp.message()
+    twily_response = sb.escalation(user_input)
+    image = re.findall("^https", twily_response)
+    if image:
+        productDetails = twily_response.splitlines()
+        msg.media(productDetails[0])
+        msg.body(productDetails[1])   
+    else:
+        msg.body(twily_response)
+
+    return str(resp)
     
-    if 'hello' in incoming_msg:
-        mainmenu = ("Hello  \n How may I help you?\n 1. Check products\n 2. Customer support\n 3.See promotions\n 4. Latest news\n Please pick a number")
-        msg.body(mainmenu)
-        
-    if '1' in incoming_msg:
-        product = get_products(incoming_msg)
-        msg.media(get_products.image)
-        msg.body(product)
-      
-    if '2' in incoming_msg:
-        question = answer_questions(incoming_msg)
-        response.message(question)
 
-    if '3' in incoming_msg:
-        promotions = get_promotions()
-        response.message(promotions) 
+@app.route("/test")
+def bot_response():
+    user_input = request.args.get('msg').lower()
+    return f'<h2>{sb.escalation(user_input)}</h2> {sb.neg_distribution}'
 
-    if '4' in incoming_msg:
-        news = get_news()
-        response.message(news)
-     
-    return str(response)
-       
-if __name__ == '__main__':
-    app.run(debug=True)
+
+if __name__ == "__main__":
+    app.run()

@@ -38,10 +38,10 @@ def get_promotions():
 """
 
 def get_news():
-    client = pymongo.MongoClient('mongodb://localhost:27017/')
+    client = pymongo.MongoClient('mongodb://127.0.0.1:27017')
     dataBase = client['project_bot']
     news = dataBase['news']
-    cursor = news.find({}, { "_id": 0, "name": 1, "description": 1, "link":1}).limit(5)
+    cursor = news.find({}, { "_id": 0, "name": 1, "description": 1, "link":1}).limit(3)
     result = []
 
     for data in cursor:
